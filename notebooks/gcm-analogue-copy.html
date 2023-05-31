@@ -1,0 +1,970 @@
+
+
+<!DOCTYPE html>
+
+
+<html >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Lorenz-96 and its GCM Analog &#8212; Learning Machine Learning with Lorenz-96</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/gcm-analogue-copy';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="None"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/newlogo.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../_static/newlogo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+    <p class="title logo__title">Learning Machine Learning with Lorenz-96</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Lorenz-96 and General Circulation Models</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="L96-two-scale-description.html">The Lorenz-96 Two-Timescale System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gcm-analogue.html">The Lorenz-96 and its GCM Analog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gcm-parameterization-problem.html">GCM parameterizations, skill metrics, and other sources of uncertainity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="estimating-gcm-parameters.html">Tuning GCM Parameterizations</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Machine Learning with Lorenz-96</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="gradient_decent.html">Introduction to Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Universal_approximation.html">Introduction to Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Neural_network_for_Lorenz96.html">Using Neural Networks for L96 Parameterization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Improving_Neural_networks.html">Improving Performance of Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="feature_importance.html">Feature Importance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Neural-Network-Saliency-Maps.html">Generating saliency maps for neural networks trained on L96</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Neural-Network-Advection.html">Using neural networks to parameterize advection in L96</a></li>
+<li class="toctree-l1"><a class="reference internal" href="random_forest_parameterization.html">Random Forest</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Data Assimilation with Lorenz-96</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="DA_demo_L96.html">Data Assimilation demo in the Lorenz 96 (L96) two time-scale model</a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="Learning-DA-increments.html">Learning Data Assimilation Increments</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Equation Discovery with Lorenz-96</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="symbolic_methods_comparison.html">Introduction to Equation Discovery - Comparing Symbolic Regression Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sindy_L96_2scale.html">Applying SINDy equation identification to L96</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="symbolic_vs_nn_multiscale_L96.html">Symbolic Regression vs. Neural Networks on Multiscale L96</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">End Matter</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../bibliography.html">References</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/notebooks/gcm-analogue-copy.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>The Lorenz-96 and its GCM Analog</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-two-time-scale-model-analog-for-the-real-atmosphere">The two time-scale model: analog for the real atmosphere</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-single-time-scale-model-analog-for-a-general-circulation-model-gcm">The single time-scale model: Analog for a general circulation model (GCM)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-parametization-p-x-k">The parametization <span class="math notranslate nohighlight">\(P(X_k)\)</span></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-the-effect-of-parameterizations-in-the-gcm-model">Testing the effect of parameterizations in the “GCM” model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sources-of-model-error">Sources of model error</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stochastic-parameterizations">Stochastic parameterizations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <div class="tex2jax_ignore mathjax_ignore section" id="the-lorenz-96-and-its-gcm-analog">
+<h1>The Lorenz-96 and its GCM Analog<a class="headerlink" href="#the-lorenz-96-and-its-gcm-analog" title="Permalink to this headline">#</a></h1>
+<p>The physical equations of motion of the system describing the atmosphere dynamics are known. Also in the real atmosphere there is variability over all scales, from the smallest molecular scales to the largest planetary scales.
+Thus, it is not feasible to explicitly solve the known physical equations of motion within Global Climate Models (GCMs), as computational resources limit the range of scales that can be resolved. To make the behavior of the GCM better match the real world, we need to effectively parameterize the effects that the unresolved scales have on the resolved (large) scales.</p>
+<p>The two time-scale L96 model, described in the the <a class="reference external" href="https://m2lines.github.io/L96_demo/notebooks/L96-two-scale-description.html#">previous notebook</a>, can be considered as a simplified analog for real world atmosphere, where variability resides at only two discrete scales (a simplification of the continuum in the real world). In this analogy, a GCM would be a model that can only solve the equations for the slow time scale, where the effects of the fast time-scale variables would be missing. We introduce the single time-scale version of the L96 model below. To make the single time scale model match the two time scale model, the effects of the fast time scales need to parameterized into the single time scale model.</p>
+<div class="section" id="the-two-time-scale-model-analog-for-the-real-atmosphere">
+<h2>The two time-scale model: analog for the real atmosphere<a class="headerlink" href="#the-two-time-scale-model-analog-for-the-real-atmosphere" title="Permalink to this headline">#</a></h2>
+<p>We will first describe a simulation with the two time-scale model from the <a class="reference internal" href="L96-two-scale-description.html"><span class="doc">The Lorenz-96 Two-Timescale System</span></a>, which is taken as the control simulation that we hope to replicate with the single time-scale model.</p>
+<p>The forcing and resolution parameters, <span class="math notranslate nohighlight">\(F\)</span>, <span class="math notranslate nohighlight">\(J\)</span> and <span class="math notranslate nohighlight">\(K\)</span>, for the two time-scale model are fixed based on <span id="id1">[<a class="reference internal" href="../bibliography.html#id3" title="Daniel S. Wilks. Effects of stochastic parametrizations in the lorenz \textquotesingle 96 system. Quarterly Journal of the Royal Meteorological Society, 131(606):389–407, 2005. URL: https://doi.org/10.1256/qj.04.03, doi:10.1256/qj.04.03.">Wilks, 2005</a>]</span>, as <span class="math notranslate nohighlight">\(F=18\)</span> or <span class="math notranslate nohighlight">\(20\)</span>, <span class="math notranslate nohighlight">\(K=8\)</span>, and <span class="math notranslate nohighlight">\(J=32\)</span>. Here, the value chosen for the parameter <span class="math notranslate nohighlight">\(F\)</span> is set large enough to ensure chaotic behavior. We also use the reference values for the <span class="math notranslate nohighlight">\(h\)</span>, <span class="math notranslate nohighlight">\(b\)</span> and <span class="math notranslate nohighlight">\(c\)</span> parameters to be, <span class="math notranslate nohighlight">\(h=1\)</span>, <span class="math notranslate nohighlight">\(b=10\)</span>, and <span class="math notranslate nohighlight">\(c=10\)</span>.
+With this particular choice of parameter values, one model time unit (MTU) is approximately equivalent to five atmospheric days. This estimate is obtained by comparing error-doubling times in the Lorenz-96 model and the real atmosphere <span id="id2">[<a class="reference internal" href="../bibliography.html#id2" title="E.N. Lorenz. Predictability: a problem partly solved. Seminar on Predictability, 1:1-18, 1995. URL: https://www.ecmwf.int/node/10829.">Lorenz, 1995</a>]</span>.</p>
+<p>In the following code, we solve the L96 system using an accurate time-stepping scheme (RK4 with sufficiently small <span class="math notranslate nohighlight">\(\Delta t\)</span>), and plot the time evolution for the <span class="math notranslate nohighlight">\(X_k\)</span> and <span class="math notranslate nohighlight">\(Y_{j,k}\)</span> variables.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">L96_model</span> <span class="kn">import</span> <span class="n">L96</span>
+<span class="kn">from</span> <span class="nn">L96_model</span> <span class="kn">import</span> <span class="n">L96_eq1_xdot</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">23</span><span class="p">)</span>
+<span class="n">W</span> <span class="o">=</span> <span class="n">L96</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+
+<span class="o">%</span><span class="k">time</span> X,Y,t = W.run(0.01, 20.)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 4.91 s, sys: 55.7 ms, total: 4.97 s
+Wall time: 4.97 s
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here is the what the solution looks like:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">W</span><span class="o">.</span><span class="n">k</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;k&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;t&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;$X_k(t)$&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">W</span><span class="o">.</span><span class="n">j</span> <span class="o">/</span> <span class="n">W</span><span class="o">.</span><span class="n">J</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;k+j/J&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;t&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;$Y_{j,k}(t)$&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/3969402ed2b5a24a2e6acf0fb4a3fba61e099f238461d0593e2c8e49285dd880.png" src="../_images/3969402ed2b5a24a2e6acf0fb4a3fba61e099f238461d0593e2c8e49285dd880.png" />
+</div>
+</div>
+</div>
+<div class="section" id="the-single-time-scale-model-analog-for-a-general-circulation-model-gcm">
+<h2>The single time-scale model: Analog for a general circulation model (GCM)<a class="headerlink" href="#the-single-time-scale-model-analog-for-a-general-circulation-model-gcm" title="Permalink to this headline">#</a></h2>
+<p>The two time-scale model discussed above solves a set of equations for the slow and fast variables, where the equations for the slow variables are:</p>
+<div class="amsmath math notranslate nohighlight" id="equation-c8031b0e-4694-4822-bc21-5e556cb2b495">
+<span class="eqno">()<a class="headerlink" href="#equation-c8031b0e-4694-4822-bc21-5e556cb2b495" title="Permalink to this equation">#</a></span>\[\begin{align}
+\frac{d}{dt} X_k
+&amp;= - X_{k-1} \left( X_{k-2} - X_{k+1} \right) - X_k + F - \underbrace{ 
+\left( \frac{hc}{b} \right) \sum_{j=0}^{J-1} Y_{j,k}
+}_{=U_k} \ ,
+\end{align}\]</div>
+<p>where the effects of the fast scales on the slow scales are represented by the last term on the RHS, denoted as <span class="math notranslate nohighlight">\(U_k\)</span>, <span class="math notranslate nohighlight">\(k=1,\ldots,k\)</span>.</p>
+<p>We consider the single time-scale model to be one where explicit equations for the fast scales are not solved, and so we do not know what <span class="math notranslate nohighlight">\(Y_{j,k}\)</span> or subsequently <span class="math notranslate nohighlight">\(U_k\)</span> are. In this single time-scale model the effects of the fast scales are either missing, assume <span class="math notranslate nohighlight">\(U_k=0\)</span>, or need to be parameterized in terms of the known slow time-scale variables, <span class="math notranslate nohighlight">\(P (X_k) \approx U_k\)</span>.</p>
+<div class="section" id="the-parametization-p-x-k">
+<h3>The parametization <span class="math notranslate nohighlight">\(P(X_k)\)</span><a class="headerlink" href="#the-parametization-p-x-k" title="Permalink to this headline">#</a></h3>
+<p>The one time-scale equation of the Lorenz-96 model with a parameterization for the effects of the fast time-scale or “unresolved scales”, also called sub-grid forcing, can be written as:</p>
+<div class="amsmath math notranslate nohighlight" id="equation-660784e4-8425-4fce-98cb-65f2065ef943">
+<span class="eqno">()<a class="headerlink" href="#equation-660784e4-8425-4fce-98cb-65f2065ef943" title="Permalink to this equation">#</a></span>\[\begin{align}
+\frac{d}{dt} X_k
+&amp;= - X_{k-1} \left( X_{k-2} - X_{k+1} \right) - X_k + F - P\left( X_k \right) \ .
+\end{align}\]</div>
+<p>In this notebook, we consider the particular choice of modeling the unknown parameterization with a plynomial approximation.
+Example of such a parameterization include the form proposed by
+<span id="id3">[<a class="reference internal" href="../bibliography.html#id3" title="Daniel S. Wilks. Effects of stochastic parametrizations in the lorenz \textquotesingle 96 system. Quarterly Journal of the Royal Meteorological Society, 131(606):389–407, 2005. URL: https://doi.org/10.1256/qj.04.03, doi:10.1256/qj.04.03.">Wilks, 2005</a>]</span>:</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{equation*}
+P(X_k)=b_0 + b_1 X_k + b_2 X_k^2 + b_3 X_k^3 + b_4 X_k^4 + e_k
+\end{equation*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(e_k\)</span> is a stochastic component.</p>
+<p>Alternatively, we also consider a lower-order polynomial as suggested by
+<span id="id4">[<a class="reference internal" href="../bibliography.html#id4" title="H. M. Arnold, I. M. Moroz, and T. N. Palmer. Stochastic parametrizations and model uncertainty in the lorenz '96 system. Philosophical Transactions of the Royal Society A: Mathematical, Physical and Engineering Sciences, 371(1991):20110479, 2013. URL: https://doi.org/10.1098/rsta.2011.0479, doi:10.1098/rsta.2011.0479.">Arnold <em>et al.</em>, 2013</a>]</span>:</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{equation*}
+P(X_k)=b_0 + b_1 X_k + e_k
+\end{equation*}\]</div>
+<p>In summary: with the “real world atmosphere” system in hand, we can “observe” the effect of the sub-grid forcing on the large scale (<span class="math notranslate nohighlight">\(U_k\)</span>) and test the skill of the polynomial function, <span class="math notranslate nohighlight">\(P(X_k)\)</span>, models/parameterizations.</p>
+<p>In the following code segment, we solve the one time-scale Lorenz-96 system using an inaccurate time-stepping (Euler-forward with only-just stable <span class="math notranslate nohighlight">\(\Delta t\)</span>) and an unknown parameterization of the “unresolved processes”, <span class="math notranslate nohighlight">\(P(X_k)\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">time</span> X, Y, t = W.run(0.05, 200.) # We run the 2 time-scale model again for longer time, to generate more data.
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 17.9 s, sys: 24.3 ms, total: 18 s
+Wall time: 18 s
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X_copy</span> <span class="o">=</span> <span class="n">X</span>
+<span class="c1"># Generate U_k samples from 2 time-scale model</span>
+<span class="n">U_sample</span> <span class="o">=</span> <span class="p">(</span><span class="n">W</span><span class="o">.</span><span class="n">h</span> <span class="o">*</span> <span class="n">W</span><span class="o">.</span><span class="n">c</span> <span class="o">/</span> <span class="n">W</span><span class="o">.</span><span class="n">b</span><span class="p">)</span> <span class="o">*</span> <span class="n">Y</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">Y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">W</span><span class="o">.</span><span class="n">K</span><span class="p">,</span> <span class="n">W</span><span class="o">.</span><span class="n">J</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We now compare the results obtained with a linear polynomial approximation, <span id="id5">Wilks [<a class="reference internal" href="../bibliography.html#id3" title="Daniel S. Wilks. Effects of stochastic parametrizations in the lorenz \textquotesingle 96 system. Quarterly Journal of the Royal Meteorological Society, 131(606):389–407, 2005. URL: https://doi.org/10.1256/qj.04.03, doi:10.1256/qj.04.03.">2005</a>]</span> polynomial parameterization and the “truth” values of the coupling terms.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Fit polynomial of order 1.</span>
+<span class="n">p1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polyfit</span><span class="p">(</span>
+    <span class="n">X_copy</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">U_sample</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="mi">1</span>
+<span class="p">)</span>  <span class="c1"># Fit a linear curve through the data.</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Poly coeffs:&quot;</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
+
+<span class="n">p4</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="mf">0.000707</span><span class="p">,</span>
+    <span class="o">-</span><span class="mf">0.0130</span><span class="p">,</span>
+    <span class="o">-</span><span class="mf">0.0190</span><span class="p">,</span>
+    <span class="mf">1.59</span><span class="p">,</span>
+    <span class="mf">0.275</span><span class="p">,</span>
+<span class="p">]</span>  <span class="c1"># Polynomial from Wilks, 2005 (coefficients from paper)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Poly coeffs: [0.85439536 0.75218026]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">)</span>
+<span class="c1"># 2D histogram of X vs U</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist2d</span><span class="p">(</span><span class="n">X_copy</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">U_sample</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">bins</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;$X_k$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$U_k = \frac</span><span class="si">{hc}{b}</span><span class="s2">\sum_j Y_{j,k}$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;PDF&quot;</span><span class="p">)</span>
+
+<span class="c1"># Fits from polynomials</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">12</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">polyval</span><span class="p">(</span><span class="n">p4</span><span class="p">,</span> <span class="n">x</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;$P_4(X_k)$ - Wilks, 2005&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">polyval</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">x</span><span class="p">),</span> <span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;$P_1(X_k)$&quot;</span><span class="p">)</span>
+
+
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">7</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/c20856426db6571b7afff12caee3a80fd0e2ee35f918c1995f9cfc0162d4584a.png" src="../_images/c20856426db6571b7afff12caee3a80fd0e2ee35f918c1995f9cfc0162d4584a.png" />
+</div>
+</div>
+<p>The figure above shows that the the relationship between the slow variables (<span class="math notranslate nohighlight">\(X_k\)</span>) and the observed coupling term (<span class="math notranslate nohighlight">\(U_k\)</span>) is non-linear. The higher order polynomlial, since it is more flexible, does a better job at capturing the overall pattern, relative to the linear fit.</p>
+</div>
+</div>
+<div class="section" id="testing-the-effect-of-parameterizations-in-the-gcm-model">
+<h2>Testing the effect of parameterizations in the “GCM” model<a class="headerlink" href="#testing-the-effect-of-parameterizations-in-the-gcm-model" title="Permalink to this headline">#</a></h2>
+<p>Now that we have a couple of different candidate parameterizations that can roughly predict the relationship between the slow variables and sub-grid forcing, we test their impact in a GCM simulation where the parameterization is required. We compare four simulations:</p>
+<ul class="simple">
+<li><p>“Real world”: corresponding to the “truth” model goverened by the full two time-scale Lorenz-96 system.</p></li>
+<li><p>GCM without parameterization: corresponding to the one time-scale Lorenz-96 system without any the coupling term. We use a forward-Euler scheme to integrate the model forward.</p></li>
+<li><p>GCM with our parameterization: corresponding to the one time-scale Lorenz-96 system with the linear polynomial approximation of the coupling terms as obtained above.</p></li>
+<li><p>GCM with <span id="id6">[<a class="reference internal" href="../bibliography.html#id3" title="Daniel S. Wilks. Effects of stochastic parametrizations in the lorenz \textquotesingle 96 system. Quarterly Journal of the Royal Meteorological Society, 131(606):389–407, 2005. URL: https://doi.org/10.1256/qj.04.03, doi:10.1256/qj.04.03.">Wilks, 2005</a>]</span> parameterization: corresponding to the one time-scale Lorenz-96 system with a third-order polynomial approximation of the coupling terms.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># First we define the GCM</span>
+<span class="k">def</span> <span class="nf">GCM</span><span class="p">(</span><span class="n">X0</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">nt</span><span class="p">,</span> <span class="n">param</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+    <span class="n">time</span><span class="p">,</span> <span class="n">hist</span><span class="p">,</span> <span class="n">X</span> <span class="o">=</span> <span class="n">dt</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nt</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nt</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">X0</span><span class="p">)))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">X0</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nt</span><span class="p">):</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">X</span> <span class="o">+</span> <span class="n">dt</span> <span class="o">*</span> <span class="p">(</span><span class="n">L96_eq1_xdot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">F</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">polyval</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">X</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mf">1e3</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="n">hist</span><span class="p">[</span><span class="n">n</span><span class="p">],</span> <span class="n">time</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">X</span><span class="p">,</span> <span class="n">dt</span> <span class="o">*</span> <span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">hist</span><span class="p">,</span> <span class="n">time</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">13</span><span class="p">)</span>
+<span class="n">T</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="c1"># Real world</span>
+<span class="n">X_true</span><span class="p">,</span> <span class="n">Y_true</span><span class="p">,</span> <span class="n">T_true</span> <span class="o">=</span> <span class="n">W</span><span class="o">.</span><span class="n">randomize_IC</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">T</span><span class="p">)</span>
+<span class="n">X_init</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">F_mod</span> <span class="o">=</span> <span class="n">X_true</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">W</span><span class="o">.</span><span class="n">K</span><span class="p">),</span> <span class="mf">0.002</span><span class="p">,</span> <span class="n">W</span><span class="o">.</span><span class="n">F</span> <span class="o">+</span> <span class="mf">0.0</span>
+<span class="c1"># The reason for adding the zero terms to X and F will become clear below, where the amplitude will be increased.</span>
+
+<span class="c1"># no parameterization</span>
+<span class="n">X_gcm1</span><span class="p">,</span> <span class="n">T_gcm1</span> <span class="o">=</span> <span class="n">GCM</span><span class="p">(</span><span class="n">X_init</span><span class="p">,</span> <span class="n">F_mod</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">T</span> <span class="o">/</span> <span class="n">dt</span><span class="p">))</span>
+<span class="c1"># Linear parameterization</span>
+<span class="n">X_gcm2</span><span class="p">,</span> <span class="n">T_gcm2</span> <span class="o">=</span> <span class="n">GCM</span><span class="p">(</span><span class="n">X_init</span><span class="p">,</span> <span class="n">F_mod</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">T</span> <span class="o">/</span> <span class="n">dt</span><span class="p">),</span> <span class="n">param</span><span class="o">=</span><span class="n">p1</span><span class="p">)</span>
+<span class="c1"># Wilks parameterization - 4th order polynomial.</span>
+<span class="n">X_gcm3</span><span class="p">,</span> <span class="n">T_gcm3</span> <span class="o">=</span> <span class="n">GCM</span><span class="p">(</span><span class="n">X_init</span><span class="p">,</span> <span class="n">F_mod</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">T</span> <span class="o">/</span> <span class="n">dt</span><span class="p">),</span> <span class="n">param</span><span class="o">=</span><span class="n">p4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we look at Hovmoeller plots of the different solutions.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">17</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">lims</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;vmin&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">12</span><span class="p">,</span> <span class="s2">&quot;vmax&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span> <span class="s2">&quot;levels&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">12</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">12</span><span class="p">),</span> <span class="s2">&quot;extend&quot;</span><span class="p">:</span> <span class="s2">&quot;both&quot;</span><span class="p">}</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">141</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">W</span><span class="o">.</span><span class="n">k</span><span class="p">,</span> <span class="n">T_true</span> <span class="o">+</span> <span class="n">t</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">X_true</span><span class="p">,</span> <span class="o">**</span><span class="n">lims</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;$k$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;$t$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Real world&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">142</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">W</span><span class="o">.</span><span class="n">k</span><span class="p">,</span> <span class="n">T_gcm1</span> <span class="o">+</span> <span class="n">t</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">X_gcm1</span><span class="p">,</span> <span class="o">**</span><span class="n">lims</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;$k$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;$t$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;GCM without parameterization&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">143</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">W</span><span class="o">.</span><span class="n">k</span><span class="p">,</span> <span class="n">T_gcm3</span> <span class="o">+</span> <span class="n">t</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">X_gcm2</span><span class="p">,</span> <span class="o">**</span><span class="n">lims</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;$k$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;$t$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;GCM with linear parameterization&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">144</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">W</span><span class="o">.</span><span class="n">k</span><span class="p">,</span> <span class="n">T_gcm2</span> <span class="o">+</span> <span class="n">t</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">X_gcm3</span><span class="p">,</span> <span class="o">**</span><span class="n">lims</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;$k$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;$t$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;GCM with Wilks&#39; parameterization&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/ce078c277684c1d85d2232a048506bf31898de1bc47937f473267453ece16384.png" src="../_images/ce078c277684c1d85d2232a048506bf31898de1bc47937f473267453ece16384.png" />
+</div>
+</div>
+<p>The next plot shows the temporal evolution of the variable <span class="math notranslate nohighlight">\(X_3\)</span> obtained with the four models listed above.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">k</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">T_true</span> <span class="o">+</span> <span class="n">t</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">X_true</span><span class="p">[:,</span> <span class="n">k</span><span class="p">],</span> <span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Real world&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">T_gcm1</span> <span class="o">+</span> <span class="n">t</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">X_gcm1</span><span class="p">[:,</span> <span class="n">k</span><span class="p">],</span> <span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;GCM without parameterization&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">T_gcm1</span> <span class="o">+</span> <span class="n">t</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">X_gcm2</span><span class="p">[:,</span> <span class="n">k</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;GCM with our parameterization&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">T_gcm1</span> <span class="o">+</span> <span class="n">t</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">X_gcm3</span><span class="p">[:,</span> <span class="n">k</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;GCM with Wilks parameterization&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;$t$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;$X_3(t)$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">25</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/d8e6ca354b9326e866c7705704354e0856e80cc51ccfc27d777a382cc016429c.png" src="../_images/d8e6ca354b9326e866c7705704354e0856e80cc51ccfc27d777a382cc016429c.png" />
+</div>
+</div>
+<p>As seen above, all the simulation diverge at long times,and the unparameterized simulation diverges very rapidly. On the other hand, the parameterized GCMs track the “real world” solution better. The Wilks parameterization does better than the linear fit.</p>
+</div>
+<div class="section" id="sources-of-model-error">
+<h2>Sources of model error<a class="headerlink" href="#sources-of-model-error" title="Permalink to this headline">#</a></h2>
+<p>We consider the following five sources of error:</p>
+<ol class="arabic">
+<li><p>Missing physics: which is modeled with a GCM without parameterization that corresponds to the one time-scale Lorenz-96 system without any the coupling term.</p></li>
+<li><p>Poorly parameterized unresolved physics: which is studied by considering a first-order and third-order polynomial approximations of the coupling terms:</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{equation*}
+    P_4 \rightarrow P_1
+    \end{equation*}\]</div>
+</li>
+<li><p>Unknown forcing: which is modeled by adding an error to the forcing term:</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{equation*}
+    F \rightarrow F + error
+    \end{equation*}\]</div>
+</li>
+<li><p>Numerical approximation: which is studied by increasing the time-step:</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{equation*}
+    \Delta t \rightarrow 10 \Delta t
+    \end{equation*}\]</div>
+</li>
+<li><p>Initialization error: which is modeled by adding an error to the initial condition:</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{equation*}
+    X(t=0) \rightarrow X(t=0) + error
+    \end{equation*}\]</div>
+</li>
+</ol>
+<p>The next code estimates these sources of error and the next figure shows their relative contributions. For reference, we also plot the error of the GCM using <span id="id7">[<a class="reference internal" href="../bibliography.html#id3" title="Daniel S. Wilks. Effects of stochastic parametrizations in the lorenz \textquotesingle 96 system. Quarterly Journal of the Royal Meteorological Society, 131(606):389–407, 2005. URL: https://doi.org/10.1256/qj.04.03, doi:10.1256/qj.04.03.">Wilks, 2005</a>]</span> polynomial coupling term and without any of the sources of error listed above. All errors are evaluated by comparing the GCMs to the “truth” model goverened by the full two time-scale Lorenz-96 system.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">err</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">X_true</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(((</span><span class="n">X</span> <span class="o">-</span> <span class="n">X_true</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="p">:])</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">13</span><span class="p">)</span>
+<span class="n">T</span><span class="p">,</span> <span class="n">dt</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.001</span>
+<span class="n">X_tr</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">W</span><span class="o">.</span><span class="n">randomize_IC</span><span class="p">()</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="mf">0.0001</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">T</span><span class="p">)</span>
+<span class="n">X_gcm</span><span class="p">,</span> <span class="n">T_c</span> <span class="o">=</span> <span class="n">GCM</span><span class="p">(</span><span class="n">W</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="n">W</span><span class="o">.</span><span class="n">F</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">T</span> <span class="o">/</span> <span class="n">dt</span><span class="p">),</span> <span class="n">param</span><span class="o">=</span><span class="n">p4</span><span class="p">)</span>
+<span class="n">X_frc</span><span class="p">,</span> <span class="n">T_c</span> <span class="o">=</span> <span class="n">GCM</span><span class="p">(</span><span class="n">W</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="n">W</span><span class="o">.</span><span class="n">F</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">T</span> <span class="o">/</span> <span class="n">dt</span><span class="p">),</span> <span class="n">param</span><span class="o">=</span><span class="n">p4</span><span class="p">)</span>
+<span class="n">X_ic</span><span class="p">,</span> <span class="n">T_c</span> <span class="o">=</span> <span class="n">GCM</span><span class="p">(</span><span class="n">W</span><span class="o">.</span><span class="n">X</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">W</span><span class="o">.</span><span class="n">F</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">T</span> <span class="o">/</span> <span class="n">dt</span><span class="p">),</span> <span class="n">param</span><span class="o">=</span><span class="n">p4</span><span class="p">)</span>
+<span class="n">X_dt</span><span class="p">,</span> <span class="n">T_dt</span> <span class="o">=</span> <span class="n">GCM</span><span class="p">(</span><span class="n">W</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="n">W</span><span class="o">.</span><span class="n">F</span><span class="p">,</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">dt</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">T</span> <span class="o">/</span> <span class="n">dt</span> <span class="o">/</span> <span class="mi">10</span><span class="p">),</span> <span class="n">param</span><span class="o">=</span><span class="n">p4</span><span class="p">)</span>
+<span class="n">X_phys</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">GCM</span><span class="p">(</span><span class="n">W</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="n">W</span><span class="o">.</span><span class="n">F</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">T</span> <span class="o">/</span> <span class="n">dt</span><span class="p">))</span>
+<span class="n">X_prm</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">GCM</span><span class="p">(</span><span class="n">W</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="n">W</span><span class="o">.</span><span class="n">F</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">T</span> <span class="o">/</span> <span class="n">dt</span><span class="p">),</span> <span class="n">param</span><span class="o">=</span><span class="n">p1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">T_c</span><span class="p">,</span> <span class="n">err</span><span class="p">(</span><span class="n">X_gcm</span><span class="p">,</span> <span class="n">X_tr</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;GCM&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">T_c</span><span class="p">,</span> <span class="n">err</span><span class="p">(</span><span class="n">X_phys</span><span class="p">,</span> <span class="n">X_tr</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Missing physics&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">T_c</span><span class="p">,</span> <span class="n">err</span><span class="p">(</span><span class="n">X_prm</span><span class="p">,</span> <span class="n">X_tr</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Parameterization&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">T_c</span><span class="p">,</span> <span class="n">err</span><span class="p">(</span><span class="n">X_frc</span><span class="p">,</span> <span class="n">X_tr</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Unknown forcing&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">T_dt</span><span class="p">,</span> <span class="n">err</span><span class="p">(</span><span class="n">X_dt</span><span class="p">,</span> <span class="n">X_tr</span><span class="p">[::</span><span class="mi">10</span><span class="p">]),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Numerical approximation&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">T_c</span><span class="p">,</span> <span class="n">err</span><span class="p">(</span><span class="n">X_ic</span><span class="p">,</span> <span class="n">X_tr</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Initialization error&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;$t$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Error&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">7</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/4892d312215e6245d16ce9733379697f853eb663d4cf56993e223b685efddd62.png" src="../_images/4892d312215e6245d16ce9733379697f853eb663d4cf56993e223b685efddd62.png" />
+</div>
+</div>
+<p>For this particular set of parameter values, the removal of the coupling term results in the highest error. The second and third sources of error correspond to the numerical error (introduced by increasing the time-step) and to the error resulting form poorly parameterized unresolved physics (modeled by consideing a first-order polynomial approximation of the coupling terms) respectively.</p>
+<p>The errors introduced by an unknown forcing and a different initialization are the least among the sources of errors considered.</p>
+</div>
+<div class="section" id="stochastic-parameterizations">
+<h2>Stochastic parameterizations<a class="headerlink" href="#stochastic-parameterizations" title="Permalink to this headline">#</a></h2>
+<p>Next, we run the following two variations of two time-scale Lorenz-96:</p>
+<ol class="arabic simple">
+<li><p>The GCM with our parameterization corresponding to the one time-scale Lorenz-96 system, with the linear polynomial approximation of the coupling terms.</p></li>
+<li><p>The GCM with <span id="id8">[<a class="reference internal" href="../bibliography.html#id3" title="Daniel S. Wilks. Effects of stochastic parametrizations in the lorenz \textquotesingle 96 system. Quarterly Journal of the Royal Meteorological Society, 131(606):389–407, 2005. URL: https://doi.org/10.1256/qj.04.03, doi:10.1256/qj.04.03.">Wilks, 2005</a>]</span> parameterization corresponding to the one time-scale Lorenz-96 system with a third-order polynomial approximation of the coupling terms.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Build a 100-&quot;day&quot; climatology</span>
+
+<span class="n">T</span><span class="p">,</span> <span class="n">dt</span> <span class="o">=</span> <span class="mf">100.0</span><span class="p">,</span> <span class="mf">0.001</span>
+<span class="o">%</span><span class="k">time</span> X_clim,Y_clim,T_clim = W.run(0.1, T)
+<span class="o">%</span><span class="k">time</span> X1,t1 = GCM(X_init, F_mod, dt, int(T/dt), param=p1)
+<span class="o">%</span><span class="k">time</span> X2,t2 = GCM(X_init, F_mod, dt, int(T/dt), param=p4)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1min 29s, sys: 28.3 ms, total: 1min 29s
+Wall time: 1min 29s
+CPU times: user 4.05 s, sys: 24 ms, total: 4.07 s
+Wall time: 4.07 s
+CPU times: user 5.32 s, sys: 36.1 ms, total: 5.35 s
+Wall time: 5.33 s
+</pre></div>
+</div>
+</div>
+</div>
+<p>We compare the mean values of the slow variables <span class="math notranslate nohighlight">\(X_k\)</span> , <span class="math notranslate nohighlight">\(k=1,\ldots,K\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+    <span class="n">t1</span><span class="p">,</span> <span class="n">X1</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Model with linear parameterization </span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">X1</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">T_clim</span><span class="p">,</span> <span class="n">X_clim</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Real world, </span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">X_true</span><span class="o">.</span><span class="n">mean</span><span class="p">()))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t2</span><span class="p">,</span> <span class="n">X2</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Model with Wilks, </span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">X2</span><span class="o">.</span><span class="n">mean</span><span class="p">()))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;$t$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\frac</span><span class="si">{1}{K}</span><span class="s2">\sum_{k=1}^K X_k(t)$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">7</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/6aa1333dd9d25edb4e3db61d35b260b8157c06253dcbae6c98cc4d2a23ffb081.png" src="../_images/6aa1333dd9d25edb4e3db61d35b260b8157c06253dcbae6c98cc4d2a23ffb081.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">       Truth      P1   Wilks&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;mean:  </span><span class="si">%.3f</span><span class="s2">   </span><span class="si">%.3f</span><span class="s2">   </span><span class="si">%.3f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">X_true</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">X1</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">X2</span><span class="o">.</span><span class="n">mean</span><span class="p">()))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;std:   </span><span class="si">%.3f</span><span class="s2">   </span><span class="si">%.3f</span><span class="s2">   </span><span class="si">%.3f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">X_true</span><span class="o">.</span><span class="n">std</span><span class="p">(),</span> <span class="n">X1</span><span class="o">.</span><span class="n">std</span><span class="p">(),</span> <span class="n">X2</span><span class="o">.</span><span class="n">std</span><span class="p">()))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>       Truth      P1   Wilks
+mean:  3.741   2.926   3.750
+std:   4.679   4.375   4.524
+</pre></div>
+</div>
+</div>
+</div>
+<p>As expected, the <span id="id9">[<a class="reference internal" href="../bibliography.html#id3" title="Daniel S. Wilks. Effects of stochastic parametrizations in the lorenz \textquotesingle 96 system. Quarterly Journal of the Royal Meteorological Society, 131(606):389–407, 2005. URL: https://doi.org/10.1256/qj.04.03, doi:10.1256/qj.04.03.">Wilks, 2005</a>]</span> parameterization gives a mean value of the slow variables that is closer to the one obtained with the “truth” model compared to the model with linear parameterization since <span id="id10">[<a class="reference internal" href="../bibliography.html#id3" title="Daniel S. Wilks. Effects of stochastic parametrizations in the lorenz \textquotesingle 96 system. Quarterly Journal of the Royal Meteorological Society, 131(606):389–407, 2005. URL: https://doi.org/10.1256/qj.04.03, doi:10.1256/qj.04.03.">Wilks, 2005</a>]</span> coupling term is modeled with a third-order polynomial.</p>
+<p>Next, we consider the model with the full parameterization proposed by <span id="id11">[<a class="reference internal" href="../bibliography.html#id3" title="Daniel S. Wilks. Effects of stochastic parametrizations in the lorenz \textquotesingle 96 system. Quarterly Journal of the Royal Meteorological Society, 131(606):389–407, 2005. URL: https://doi.org/10.1256/qj.04.03, doi:10.1256/qj.04.03.">Wilks, 2005</a>]</span> by adding a stochastic component such that the parameterization has the following form: <span class="math notranslate nohighlight">\(P(X_k)=b_0 + b_1 X_k + b_2 X_k^2 + b_3 X_k^3 + b_4 X_k^4 + e_k\)</span> where <span class="math notranslate nohighlight">\(e_k\)</span> is a stochastic component.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">GCMs</span><span class="p">(</span><span class="n">X0</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">nt</span><span class="p">,</span> <span class="n">param</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">stoch</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">phi</span><span class="o">=</span><span class="mf">0.984</span><span class="p">):</span>
+    <span class="n">time</span><span class="p">,</span> <span class="n">hist</span><span class="p">,</span> <span class="n">X</span> <span class="o">=</span> <span class="n">dt</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nt</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nt</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">X0</span><span class="p">)))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">X0</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">ek</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nt</span><span class="p">):</span>
+        <span class="c1"># Red noise</span>
+        <span class="n">ek</span> <span class="o">=</span> <span class="n">phi</span> <span class="o">*</span> <span class="n">ek</span> <span class="o">+</span> <span class="n">stoch</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">phi</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">phi</span><span class="p">))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">X</span> <span class="o">+</span> <span class="n">dt</span> <span class="o">*</span> <span class="p">(</span><span class="n">L96_eq1_xdot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">F</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">polyval</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span> <span class="o">+</span> <span class="n">stoch</span> <span class="o">*</span> <span class="n">ek</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mf">1e3</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="n">hist</span><span class="p">[</span><span class="n">n</span><span class="p">],</span> <span class="n">time</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">X</span><span class="p">,</span> <span class="n">dt</span> <span class="o">*</span> <span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">hist</span><span class="p">,</span> <span class="n">time</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">31</span><span class="p">)</span>
+<span class="o">%</span><span class="k">time</span> X3,t3 = GCMs(X_init, F_mod, dt, int(T/dt), param=p4)
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">       Truth      P1      P4  P4+stoch&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="s2">&quot;mean:  </span><span class="si">%.3f</span><span class="s2">   </span><span class="si">%.3f</span><span class="s2">   </span><span class="si">%.3f</span><span class="s2">   </span><span class="si">%.3f</span><span class="s2">&quot;</span>
+    <span class="o">%</span> <span class="p">(</span><span class="n">X_true</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">X1</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">X2</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">X3</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;std:   </span><span class="si">%.3f</span><span class="s2">   </span><span class="si">%.3f</span><span class="s2">   </span><span class="si">%.3f</span><span class="s2">   </span><span class="si">%.3f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">X_true</span><span class="o">.</span><span class="n">std</span><span class="p">(),</span> <span class="n">X1</span><span class="o">.</span><span class="n">std</span><span class="p">(),</span> <span class="n">X2</span><span class="o">.</span><span class="n">std</span><span class="p">(),</span> <span class="n">X3</span><span class="o">.</span><span class="n">std</span><span class="p">()))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 6.92 s, sys: 20 ms, total: 6.94 s
+Wall time: 6.94 s
+
+
+       Truth      P1      P4  P4+stoch
+mean:  3.741   2.926   3.750   3.758
+std:   4.679   4.375   4.524   4.537
+</pre></div>
+</div>
+</div>
+</div>
+<p>By comparing the mean and standard deviation values of the slow variables <span class="math notranslate nohighlight">\(X_k\)</span> , <span class="math notranslate nohighlight">\(k=1,\ldots,K\)</span>, we do not see a significant improvement when adding the stochastic component <span class="math notranslate nohighlight">\(e_k\)</span> to the third-order polynomial parameterization.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">T_true</span><span class="p">,</span> <span class="n">X_true</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Real world, </span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">X_true</span><span class="o">.</span><span class="n">mean</span><span class="p">()))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+    <span class="n">t1</span><span class="p">,</span> <span class="n">X1</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Model with linear parameterization </span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">X1</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t2</span><span class="p">,</span> <span class="n">X2</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Model with Wilks, </span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">X2</span><span class="o">.</span><span class="n">mean</span><span class="p">()))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+    <span class="n">t3</span><span class="p">,</span>
+    <span class="n">X3</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Model with Wilks + stochastic component </span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">X3</span><span class="o">.</span><span class="n">mean</span><span class="p">()),</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;$t$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\frac</span><span class="si">{1}{K}</span><span class="s2">\sum_{k=1}^K X_k(t)$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">7</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/d27e62e72aafca6f9a5afe7fdd89b481474d02547e5f8f9511c0d3f1fc3ceb4f.png" src="../_images/d27e62e72aafca6f9a5afe7fdd89b481474d02547e5f8f9511c0d3f1fc3ceb4f.png" />
+</div>
+</div>
+</div>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">#</a></h2>
+<p>In this chapter:</p>
+<ul class="simple">
+<li><p>We used the two time-scale Lorenz-96 model to generate a real world, or “truth”, dataset</p></li>
+<li><p>We built a “GCM” with a rudimentary parameterization of coupling to unresolved processes (<span class="math notranslate nohighlight">\(\left( \frac{hc}{b} \right) \sum_{j=0}^{J-1} Y_{j,k}\)</span>)</p></li>
+<li><p>We deliberately used low-order integration and longer time-step for non-trivial numerical model errors.</p></li>
+<li><p>We compared the few different sources of errors in models.</p></li>
+<li><p>We also compared the results obtained:</p>
+<ol class="arabic simple">
+<li><p>A GCM corresponding to the one time-scale Lorenz-96 system with a linear polynomial parameterization of the coupling terms.</p></li>
+<li><p>A GCM with <span id="id12">[<a class="reference internal" href="../bibliography.html#id3" title="Daniel S. Wilks. Effects of stochastic parametrizations in the lorenz \textquotesingle 96 system. Quarterly Journal of the Royal Meteorological Society, 131(606):389–407, 2005. URL: https://doi.org/10.1256/qj.04.03, doi:10.1256/qj.04.03.">Wilks, 2005</a>]</span> parameterization corresponding to the one time-scale Lorenz-96 system with a third-order polynomial approximation of the coupling terms.</p></li>
+<li><p>A GCM with the full <span id="id13">[<a class="reference internal" href="../bibliography.html#id3" title="Daniel S. Wilks. Effects of stochastic parametrizations in the lorenz \textquotesingle 96 system. Quarterly Journal of the Royal Meteorological Society, 131(606):389–407, 2005. URL: https://doi.org/10.1256/qj.04.03, doi:10.1256/qj.04.03.">Wilks, 2005</a>]</span> parameterization corresponding to the one time-scale Lorenz-96 system with a third-order polynomial approximation of the coupling terms and a stochastic component.</p></li>
+</ol>
+</li>
+</ul>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-two-time-scale-model-analog-for-the-real-atmosphere">The two time-scale model: analog for the real atmosphere</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-single-time-scale-model-analog-for-a-general-circulation-model-gcm">The single time-scale model: Analog for a general circulation model (GCM)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-parametization-p-x-k">The parametization <span class="math notranslate nohighlight">\(P(X_k)\)</span></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-the-effect-of-parameterizations-in-the-gcm-model">Testing the effect of parameterizations in the “GCM” model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sources-of-model-error">Sources of model error</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stochastic-parameterizations">Stochastic parameterizations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The M<sup>2</sup>LInES Community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
